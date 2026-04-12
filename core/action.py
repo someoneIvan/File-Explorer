@@ -1,4 +1,3 @@
-import shutil
 from pathlib import Path
 
 def change_directory(almost_new_location, current_path):
@@ -16,16 +15,6 @@ def change_directory(almost_new_location, current_path):
         else:
             print(f"Directory can't be changed. Path changing error.")
             return current_path
-
-def moving(file_location, new_location, current_path):
-    new_location = new_location.strip()
-    if current_path.is_dir():
-        if new_location.is_dir():
-            if file_location.is_file():
-                pass
-            else:
-                raise OSError("File can't be found")
-        else:
-            raise OSError("New file location can't be found")
-    else:
-        raise OSError("Current file location can't be found")
+        
+def user_help():
+    print("Later... :D")

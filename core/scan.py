@@ -4,12 +4,12 @@ def scan(pathscan):
 
     result = []
 
-    if not (Path.exists and Path.is_dir):
+    if not (pathscan.exists() and pathscan.is_dir()):
         raise OSError("Error. Path not found.")
     else:
         try:
             for item in Path(pathscan).iterdir():
-                if item.is_file:
+                if item.is_file():
                     namef = item.name
                     sizef = item.stat().st_size
                     formatf = item.suffix
@@ -21,7 +21,7 @@ def scan(pathscan):
                         "type" : "file"
                     })
 
-                elif item.is_dir:
+                elif item.is_dir():
                     named = item.name
                     sized = item.stat().st_size
                     formatd = ""
