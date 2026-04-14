@@ -9,19 +9,35 @@ if __name__ == "__main__":
     while True:
         p = Path.home
         print(f"{scan(p)}\n")
-        choise = input("Введите команду:")
+        choise = input("Enter the command:")
 
-        try:
-            if choise == "help":
-                user_help()
-            elif choise[0] == "cd":
-                p = change_directory(p, choise[:0])
-                print(scan(p))
-            elif choise == "list":
-                print(scan(p))
-            elif choise[0] = "del":
-                try:
-                    os.remove(os.path.join(p, choise[:0]))
-                except PermissionError or IsADirectoryError:
-                    shutil.rmtree(os.path.join(p, choise[:0]))
-            elif
+        if choise == "help":
+            user_help()
+        elif choise == "cd":
+            try:
+                p = change_directory(p / ' '.join(choise[1:]))
+            except:
+                p = choise[1:]
+            print(scan(p))
+        elif choise == "list":
+            print(scan(p))
+        elif choise = "delete":
+            choise_1 = input("Enter path:")
+
+            try:
+                os.remove(choise_1)
+            except PermissionError or IsADirectoryError:
+                shutil.rmtree(choise_1)
+        elif choise == "copy":
+            choise_1 = input("Enter source path:")
+            choise_2 = input("Enter destination path:")
+
+            try:
+                shutil.copy2(choise_1, choise_2)
+            except IsADirectoryError:
+                shutil.copytree(choise_1, choise_2)
+        elif choise == "move":
+            choise_1 = input("Enter source path:")
+            choise_2 = input("Enter destination path:")
+
+            shutil.move(choise_1, choise_2)
