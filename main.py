@@ -41,3 +41,7 @@ if __name__ == "__main__":
             choise_2 = input("Enter destination path:")
 
             shutil.move(choise_1, choise_2)
+        elif choise == "open":
+            choise_1 = p / input("Enter file name:")
+
+            os.startfile(choise_1)
