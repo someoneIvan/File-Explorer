@@ -4,6 +4,11 @@ def scan(pathscan):
 
     result = []
 
+    if isinstance(pathscan, str):
+        pathscan = Path(pathscan)
+    elif not isinstance(pathscan, Path):
+        raise TypeError("Error. Incorrect path type.")
+
     if not (pathscan.exists() and pathscan.is_dir()):
         raise OSError("Error. Path not found.")
     else:
@@ -37,7 +42,3 @@ def scan(pathscan):
             return result
         except Exception as e:
             return f"Unknown error: {e}"
-
-if __name__ == "__main__":
-    pathscan = input(f"Test directory path: ")
-    print(scan(pathscan))

@@ -7,8 +7,9 @@ import shutil, os
 if __name__ == "__main__":
     print("Welcome to File Explorer!\n")
     while True:
-        p = Path.home
-        print(f"{scan(p)}\n")
+        p = Path.home()
+        p_1 = scan(p)
+        print(f"{p_1}\n")
         choise = input("Enter the command:")
 
         if choise == "help":
@@ -21,7 +22,7 @@ if __name__ == "__main__":
             print(scan(p))
         elif choise == "list":
             print(scan(p))
-        elif choise = "delete":
+        elif choise == "delete":
             choise_1 = input("Enter path:")
 
             try:
