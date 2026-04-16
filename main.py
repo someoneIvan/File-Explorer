@@ -1,5 +1,5 @@
 from core.scan import scan
-from core.action import change_directory, user_help
+from core.actions import change_directory, user_help, file_list
 
 from pathlib import Path
 import shutil, os
@@ -7,13 +7,13 @@ import shutil, os
 if __name__ == "__main__":
     print("Welcome to File Explorer!\n")
     while True:
-        p = Path.home()
-        p_1 = scan(p)
-        print(f"{p_1}\n")
+        p = Path("/").resolve()
         choise = input("Enter the command:")
 
         if choise == "help":
             user_help()
+        elif choise == "ls":
+            file_list(p)
         elif choise == "cd":
             try:
                 p = change_directory(p / ' '.join(choise[1:]))
