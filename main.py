@@ -6,8 +6,8 @@ import shutil, os
 
 if __name__ == "__main__":
     print("Welcome to File Explorer!\n")
+    p = Path("/").resolve()
     while True:
-        p = Path("/").resolve()
         choise = input("Enter the command:")
 
         if choise == "help":
@@ -15,21 +15,28 @@ if __name__ == "__main__":
         elif choise == "ls":
             file_list(p)
         elif choise == "cd":
+            choise = choise.split()
             try:
                 p = change_directory(p / ' '.join(choise[1:]))
-            except:
-                p = choise[1:]
+            except FileNotFoundError:
+                print("Directory not found.")
+            except NotADirectoryError:
+                print("Path is not a directory.")
+            except PermissionError:
+                print(f"Access denied to {p}")
             print(scan(p))
         elif choise == "list":
             print(scan(p))
-        elif choise == "delete":
+        elif choise == "del":
             choise_1 = input("Enter path:")
 
             try:
                 os.remove(choise_1)
-            except PermissionError or IsADirectoryError:
+                print("File successfully deleted.")
+            except (PermissionError, IsADirectoryError):
                 shutil.rmtree(choise_1)
-        elif choise == "copy":
+                print("Directory succesfuly deleted.")
+        elif choise == "co":
             choise_1 = input("Enter source path:")
             choise_2 = input("Enter destination path:")
 
@@ -37,7 +44,7 @@ if __name__ == "__main__":
                 shutil.copy2(choise_1, choise_2)
             except IsADirectoryError:
                 shutil.copytree(choise_1, choise_2)
-        elif choise == "move":
+        elif choise == "mv":
             choise_1 = input("Enter source path:")
             choise_2 = input("Enter destination path:")
 
@@ -46,3 +53,8 @@ if __name__ == "__main__":
             choise_1 = p / input("Enter file name:")
 
             os.startfile(choise_1)
+        elif choise in ["q", "exit", "quit"]:
+            os.system("pause")
+            break
+        else:
+            print('Unknown command. Type "help" to get available commands.')
