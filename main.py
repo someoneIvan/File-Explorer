@@ -14,17 +14,10 @@ if __name__ == "__main__":
             user_help()
         elif choise == "ls":
             file_list(p)
-        elif choise == "cd":
-            choise = choise.split()
-            try:
-                p = change_directory(p / ' '.join(choise[1:]))
-            except FileNotFoundError:
-                print("Directory not found.")
-            except NotADirectoryError:
-                print("Path is not a directory.")
-            except PermissionError:
-                print(f"Access denied to {p}")
-            print(scan(p))
+        elif choise[0] == "cd":
+            choise = (choise.split())[1:]
+            p = change_directory(choise, p)
+            print(f"Directory successfully changed to {p}")
         elif choise == "list":
             print(scan(p))
         elif choise == "del":
