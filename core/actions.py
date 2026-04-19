@@ -3,7 +3,7 @@ import os, datetime
 
 def change_directory(almost_new_location, current_path):
     almost_new_location = almost_new_location.strip()
-    if not almost_new_location or almost_new_location == ".":
+    if (not almost_new_location) or (almost_new_location == "."):
         return current_path
     elif almost_new_location == "..":
         new_location = current_path.parent
@@ -25,8 +25,6 @@ FILE EXPLORER COMMANDS
 help                - Show this help message.
 
 ls                  - List files and directories in the current directory (simple view).
-
-list                - List files and directories in the current directory (detailed view, same as scan()).
 
 cd <path>           - Change current directory to <path>. The path can be relative or absolute.
                       Example: cd Documents, cd /home/user
@@ -59,7 +57,7 @@ def file_list(pathdirectory):
     for i in range(len(files)):
         filename = files[i]
         time = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(pathdirectory, filename)))
-        print(f"{i + 1}. {filename} | Дата создания: {time}")
+        print(f"{i + 1}. {filename} | Created: {time}")
         total_size += os.path.getsize(os.path.join(pathdirectory, filename))
 
     print(f"\nSuccessfully completed.\nTotal directory size: {total_size // (8 * 1024)} KB.\nCount of files: {i + 1}.")

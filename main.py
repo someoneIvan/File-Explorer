@@ -19,10 +19,8 @@ if __name__ == "__main__":
             if not target:
                 print("Use: cd <path>")
             else:
-                p = change_directory(choise, p)
-                print(f"Directory successfully changed to {p}")
-        elif choise == "list":
-            print(scan(p))
+                p = change_directory(target, p)
+                file_list(p)
         elif choise == "del":
             choise_1 = input("Enter path:")
             try:
