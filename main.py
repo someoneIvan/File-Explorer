@@ -14,15 +14,17 @@ if __name__ == "__main__":
             user_help()
         elif choise == "ls":
             file_list(p)
-        elif choise[0] == "cd":
-            choise = (choise.split())[1:]
-            p = change_directory(choise, p)
-            print(f"Directory successfully changed to {p}")
+        elif choise.startswith("cd "):
+            target = choise[3:].strip()
+            if not target:
+                print("Use: cd <path>")
+            else:
+                p = change_directory(choise, p)
+                print(f"Directory successfully changed to {p}")
         elif choise == "list":
             print(scan(p))
         elif choise == "del":
             choise_1 = input("Enter path:")
-
             try:
                 os.remove(choise_1)
                 print("File successfully deleted.")
