@@ -1,5 +1,6 @@
 from pathlib import Path
 import os, datetime
+from core.scan_module import scan
 
 def change_directory(almost_new_location, current_path):
     almost_new_location = almost_new_location.strip()
@@ -51,13 +52,28 @@ NOTES:
 """)
 
 def file_list(pathdirectory):
-    files = os.listdir(pathdirectory)
+    path = Path(pathdirectory)
+    items = scan(path)
+
     total_size = 0
+    file_count = 0
+    folder_count = 0
 
-    for i in range(len(files)):
-        filename = files[i]
-        time = datetime.datetime.fromtimestamp(os.path.getmtime(os.path.join(pathdirectory, filename)))
-        print(f"{i + 1}. {filename} | Created: {time}")
-        total_size += os.path.getsize(os.path.join(pathdirectory, filename))
+    print(f"\n📂 Current directory: {path.resolve()}\n")
 
-    print(f"\nSuccessfully completed.\nTotal directory size: {total_size // (8 * 1024)} KB.\nCount of files: {i + 1}.")
+    for item in items:
+        if item["type"] == "dir":
+            print(f"📁 {item['name']}/")
+            folder_count += 1
+        else:
+            size_kb = item["size"] // 1024
+            total_size += item["size"]
+            file_count += 1
+            
+            # Красивое выравнивание имени и размера
+            print(f"   {item['name']:<40} {size_kb:>8} KB")
+
+    print("\n" + "-" * 60)
+    print(f"Total: {folder_count} folders, {file_count} files")
+    print(f"Total size: {total_size // (1024*1024)} MB  ({total_size // 1024} KB)")
+    print("-" * 60)

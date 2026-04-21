@@ -1,4 +1,4 @@
-from core.scan import scan
+from core.scan_module import scan
 from core.actions import change_directory, user_help, file_list
 
 from pathlib import Path
@@ -10,7 +10,9 @@ if __name__ == "__main__":
     while True:
         choise = input("Enter the command:")
 
-        if choise == "help":
+        if not choise:
+            print('Empty command. Use "help" to get command list')
+        elif choise == "help":
             user_help()
         elif choise == "ls":
             file_list(p)
