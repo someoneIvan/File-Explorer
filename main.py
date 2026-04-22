@@ -26,8 +26,12 @@ if __name__ == "__main__":
         elif choise == "del":
             choise_1 = input("Enter path:")
             try:
-                os.remove(choise_1)
-                print("File successfully deleted.")
+                if not choise_1.exists():
+                    os.remove(p / choise_1)
+                    print("File successfully deleted.")
+                else:
+                    os.remove(choise_1)
+                    print("File successfully deleted.")
             except (PermissionError, IsADirectoryError):
                 shutil.rmtree(choise_1)
                 print("Directory succesfuly deleted.")
@@ -36,7 +40,7 @@ if __name__ == "__main__":
             choise_2 = input("Enter destination path:")
 
             try:
-                shutil.copy2(choise_1, choise_2)
+                shutil.copy2(p / choise_1, p / choise_2)
             except IsADirectoryError:
                 shutil.copytree(choise_1, choise_2)
         elif choise == "mv":
