@@ -1,4 +1,4 @@
-from core.scan_module import scan
+from core.scanmdl import scan
 from core.actions import change_directory, user_help, file_list
 
 from pathlib import Path
