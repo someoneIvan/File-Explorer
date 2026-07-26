@@ -1,79 +1,51 @@
 from pathlib import Path
-import os, datetime
-from core.scanmdl import scan
+import os
+import shutil
+import subprocess
+import platform
 
-def change_directory(almost_new_location, current_path):
-    almost_new_location = almost_new_location.strip()
-    if (not almost_new_location) or (almost_new_location == "."):
-        return current_path
-    elif almost_new_location == "..":
-        new_location = current_path.parent
-        return new_location
-    else:
-        new_location = current_path / almost_new_location
-        if new_location.exists():
-            if new_location.is_dir():
-                return new_location
-        else:
-            print(f"Directory can't be changed. Path changing error.")
-            return current_path
-        
+
 def user_help():
     print("""
-FILE EXPLORER COMMANDS
-======================
-
-help                - Show this help message.
-
-ls                  - List files and directories in the current directory (simple view).
-
-cd <path>           - Change current directory to <path>. The path can be relative or absolute.
-                      Example: cd Documents, cd /home/user
-
-del                 - Delete a file or directory. You will be prompted to enter the path.
-                      Files are removed with os.remove(), directories with shutil.rmtree().
-
-co                  - Copy a file or directory. Prompts for source and destination paths.
-                      Uses shutil.copy2() for files, shutil.copytree() for directories.
-
-mv                  - Move a file or directory. Prompts for source and destination paths.
-                      Uses shutil.move().
-
-open <filename>     - Open a file with its default application (Windows only, uses os.startfile).
-                      The file is looked up in the current directory.
-
-q, exit, quit       - Exit the File Explorer (pauses the console before closing).
-
-NOTES:
-- The current directory is initially set to the root ("/").
-- For 'cd', the path is appended to the current directory. Example: if current is /home, "cd user" goes to /home/user.
-- If a command fails (e.g., file not found, permission denied), an error message is shown.
-- Use relative paths where possible, or absolute paths starting with / or drive letter (Windows).
+Доступные команды:
+  ls          - Показать файлы в текущей папке
+  cd <path>   - Перейти в директорию (напр. cd .. или cd my_folder)
+  del         - Удалить файл или папку
+  co          - Скопировать файл или папку
+  mv          - Переместить / переименовать
+  open        - Открыть файл в системе
+  q / exit    - Выйти из программы
 """)
 
-def file_list(pathdirectory):
-    path = Path(pathdirectory)
-    items = scan(path)
 
-    total_size = 0
-    file_count = 0
-    folder_count = 0
+def file_list(path: Path):
+    print(f"\nСодержимое директории: {path}")
+    print("-" * 40)
+    try:
+        for item in path.iterdir():
+            prefix = "[DIR] " if item.is_dir() else "      "
+            print(f"{prefix}{item.name}")
+    except PermissionError:
+        print("Ошибка: Нет доступа к этой папке.")
+    print("-" * 40)
 
-    print(f"\n📂 Current directory: {path.resolve()}\n")
 
-    for item in items:
-        if item["type"] == "directory":
-            print(f"📁 {item['name']}")
-            folder_count += 1
-        else:
-            size_kb = item["size"] // 1024
-            total_size += item["size"]
-            file_count += 1
-            
-            # Красивое выравнивание имени и размера
-            print(f"📄 {item['name']:<40} {size_kb:>8} KB")
+def change_directory(target: str, current_path: Path) -> Path:
+    new_path = (current_path / target).resolve()
+    if new_path.exists() and new_path.is_dir():
+        return new_path
+    else:
+        print(f"Ошибка: Директория '{target}' не найдена!")
+        return current_path
 
-    print("\n" + "-" * 60)
-    print(f"Total: {folder_count} folders, {file_count} files")
-    print(f"Total size: {total_size // (1024*1024)} MB  ({total_size // 1024} KB)")
-    print("-" * 60)
+
+def open_file(filepath: Path):
+    """Кроссплатформенное открытие файла"""
+    system_name = platform.system()
+    
+    if system_name == "Windows":
+        os.startfile(filepath)
+    elif system_name == "Darwin":  # macOS
+        subprocess.run(["open", str(filepath)], check=False)
+    else:  # Linux
+        subprocess.run(["xdg-open", str(filepath)], check=False)

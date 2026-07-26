@@ -1,44 +1,19 @@
 from pathlib import Path
 
-def scan(pathscan):
+def scan_folder(path: Path):
+    total_files = 0
+    total_dirs = 0
 
-    result = []
+    try:
+        for item in path.rglob("*"):
+            if item.is_dir():
+                total_dirs += 1
+            else:
+                total_files += 1
+                
+        print(f"\n--- Статистика папки {path.name} ---")
+        print(f"Файлов: {total_files}")
+        print(f"Папок: {total_dirs}\n")
 
-    if isinstance(pathscan, str):
-        pathscan = Path(pathscan)
-    elif not isinstance(pathscan, Path):
-        raise TypeError("Error. Incorrect path type.")
-
-    if not (pathscan.exists() and pathscan.is_dir()):
-        raise OSError("Error. Path not found.")
-    else:
-        try:
-            for item in Path(pathscan).iterdir():
-                if item.is_file():
-                    namef = item.name
-                    sizef = item.stat().st_size
-                    formatf = item.suffix
-
-                    result.append({
-                        "name" : namef,
-                        "size" : sizef,
-                        "format" : formatf,
-                        "type" : "file"
-                    })
-
-                elif item.is_dir():
-                    named = item.name
-                    sized = item.stat().st_size
-                    formatd = ""
-                    
-                    result.append({
-                        "name" : named,
-                        "size" : sized,
-                        "format" : formatd,
-                        "type" : "directory"
-                    })
-                else:
-                    raise OSError("Unknown item in directory.")
-            return result
-        except Exception as e:
-            return f"Unknown error: {e}"
+    except PermissionError:
+        print("Ошибка: Нет доступа к некоторым подпапкам.")
