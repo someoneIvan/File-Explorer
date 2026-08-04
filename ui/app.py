@@ -1,3 +1,8 @@
+import sys
+from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
 import customtkinter as ctk
 from pathlib import Path
 from core.actions import change_directory, file_list, open_file
